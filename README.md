@@ -5,14 +5,14 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=pavel-kirienko_o1heap&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=pavel-kirienko_o1heap)
 
 O1heap is a highly deterministic constant-complexity memory allocator designed for
-hard real-time safety-critical embedded systems.
+hard real-time high-integrity embedded systems.
 The name stands for *O(1) heap*.
 
 The allocator offers
 a constant worst-case execution time (WCET) and
 a well-characterized worst-case memory fragmentation (consumption) (WCMC).
 The allocator allows the designer to statically prove its temporal and spatial properties for a given application,
-which makes it suitable for use in safety-critical systems.
+which makes it suitable for use in high-integrity embedded systems.
 
 The codebase is implemented in C99/C11 following MISRA C:2012, with several intended deviations which are unavoidable
 due to the fact that a memory allocator has to rely on inherently unsafe operations to fulfill its purpose.
@@ -35,7 +35,7 @@ The core objective of this library is to provide a dynamic memory allocator that
   memory allocator to ensure that out-of-memory (OOM) failures provably cannot occur at runtime
   under any circumstances.
 
-- The implementation shall be simple and conform to relevant safety-critical coding guidelines.
+- The implementation shall be simple and conform to relevant high-integrity coding guidelines.
 
 ### Theory
 
@@ -57,7 +57,7 @@ While it has been shown to be possible to construct a constant-complexity alloca
 worst-case and average-case memory requirements by making assumptions about the memory (de-)allocation patterns
 and/or by relying on more sophisticated algorithms, this implementation chooses a conservative approach
 where no assumptions are made about the application and the codebase is kept simple to facilitate its integration
-into verified and validated safety-critical software.
+into verified and validated high-integrity software.
 
 The library implements a modified Half-Fit algorithm -- a constant-complexity strategy originally proposed by Ogasawara.
 In this implementation, memory is allocated in fragments whose size is rounded up to the next integer power of two.
@@ -96,7 +96,7 @@ interested readers are advised to consult with the referred publications.
 Following some of the ideas expressed in the discussion about memory caching in real-time systems in [Herter 2014],
 this implementation takes caching-related issues into consideration.
 The Half-Fit algorithm itself is inherently optimized to minimize the number of random memory accesses.
-Furthermore, the allocation strategy favors least recently used memory fragments
+Furthermore, the allocation strategy favors most recently used memory fragments
 to minimize cache misses in the application.
 
 ### Implementation
@@ -244,6 +244,13 @@ The list of intentional deviations can be obtained by simply searching the codeb
 Do not suppress compliance warnings using the means provided by static analysis tools because such deviations
 are impossible to track at the source code level.
 An exception applies for the case of false-positive (invalid) warnings -- those should not be mentioned in the codebase.
+
+## Further reading
+
+- [Timing-Predictable Memory Allocation In Hard Real-Time Systems](https://publikationen.sulb.uni-saarland.de/bitstream/20.500.11880/26614/1/diss.pdf), J. Herter, 2014.
+- [Worst case fragmentation of first fit and best fit storage allocation strategies](https://academic.oup.com/comjnl/article/20/3/242/751782), J. M. Robson, 1975.
+- [Dynamic Memory Allocation In SQLite](https://sqlite.org/malloc.html) -- on Robson proof and deterministic fragmentation.
+- *[Russian]* [Динамическая память в системах жёсткого реального времени](https://habr.com/ru/post/486650/) -- issues with dynamic memory allocation in modern embedded RTOS and related popular misconceptions.
 
 ## License
 
